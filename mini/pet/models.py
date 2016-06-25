@@ -15,7 +15,7 @@ class User(models.Model):
     user_authenticated = models.BooleanField(default = False)
     user_authenticated_picture = models.ImageField(null = True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.user_id
 
 
@@ -25,17 +25,17 @@ class Activity(models.Model):
     activity_picture = models.ImageField(null = True)
     activity_price = models.DecimalField(max_digits=20,decimal_places=2,default=0.0)
     activity_pet_type = models.IntegerField(default=0)
-    activity_start_time = models.TimeField(null = True)
-    activity_end_time = models.TimeField(null = True)
+    activity_start_time = models.DateField(null = True)
+    activity_end_time = models.DateField(null = True)
     activity_status = models.IntegerField(default = 0)
 
-    def __str__(self):
-        return self.user_id
+    def __unicode__(self):
+        return self.activity_introduction
 
 class Participant(models.Model):
     participant_user_id = models.ForeignKey(User)
     participant_activity_id = models.ForeignKey(Activity)
     participant_user_type = models.IntegerField(default = 0)
 
-    def __str__(self):
-        return self.participant_user_id, self.participant_activity_id, self.participant_user_type
+    def __unicode__(self):
+        return self.participant_activity_id
