@@ -11,10 +11,6 @@ def index(request):
     else:
         return HttpResponse(util.errorJsonWrapper("只支持POST方法"))
 
-def errorJsonWrapper(errorInfo):
-    res = dict(retCode=-1, retMsg=errorInfo, retValue="")
-    return json.dumps(res)
-
 def functionChoice(methodData):
     if methodData == "postFormError":
         return HttpResponse(util.errorJsonWrapper("post数据没有method字段"))
@@ -33,7 +29,7 @@ def functionChoice(methodData):
             return HttpResponse(util.errorJsonWrapper("json数据格式中没有args字段"))
 
         if funcName == "register":
-            return register.register(funcArgs)
+            return HttpResponse(register.register(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
 

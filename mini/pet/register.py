@@ -17,6 +17,11 @@ def register(data):
         return util.errorJsonWrapper("注册数据没有user_id字段")
 
     userPassword = hashlib.md5(userPassword).hexdigest()
-    tmpUser = models.User(user_id = userId, user_password = userPassword)
-    tmpUser.save()
+
+    try:
+        tmpUser = models.User(user_id = userId, user_password = userPassword)
+        tmpUser.save()
+    except Exception:
+        return util.errorJsonWrapper("register 数据写入数据库出错")
+
     return util.simpleOkJsonWrapper()
