@@ -4,6 +4,7 @@ from django.http import HttpResponse
 import util
 import json
 import register
+import login
 
 def index(request):
     if request.method == "POST":
@@ -30,8 +31,8 @@ def functionChoice(methodData):
 
         if funcName == "register":
             return HttpResponse(register.register(funcArgs))
+        elif funcName == "login":
+            return HttpResponse(login.login(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
-
-
 
