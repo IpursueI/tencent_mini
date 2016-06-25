@@ -23,6 +23,8 @@ class Activity(models.Model):
     activity_title = models.CharField(max_length = 30, default="")
     activity_introduction = models.CharField(max_length = 300, default="")
     activity_picture = models.ImageField(null = True)
+    activity_price = models.DecimalField(max_digits=20,decimal_places=2,default=0.0)
+    activity_pet_type = models.IntegerField(default=0)
     activity_start_time = models.TimeField(null = True)
     activity_end_time = models.TimeField(null = True)
     activity_status = models.IntegerField(default = 0)
