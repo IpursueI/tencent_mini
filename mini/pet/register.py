@@ -18,7 +18,7 @@ def register(data):
 
     userPassword = hashlib.md5(userPassword).hexdigest()
 
-    checkRes = models.User.objects.filter(user_id=userId)
+    checkRes = models.User.objects.filter(user_id = userId)
 
     if len(checkRes) == 0:
         try:

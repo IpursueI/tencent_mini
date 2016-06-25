@@ -5,6 +5,7 @@ import util
 import json
 import register
 import login
+import issueAdoptPetInfo
 
 def index(request):
     if request.method == "POST":
@@ -33,6 +34,8 @@ def functionChoice(methodData):
             return HttpResponse(register.register(funcArgs))
         elif funcName == "login":
             return HttpResponse(login.login(funcArgs))
+        elif funcName == "issueAdoptPetInfo":
+            return HttpResponse(issueAdoptPetInfo.issueAdoptPetInfo(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
 
