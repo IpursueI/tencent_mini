@@ -18,10 +18,15 @@ def register(data):
 
     userPassword = hashlib.md5(userPassword).hexdigest()
 
-    try:
-        tmpUser = models.User(user_id = userId, user_password = userPassword)
-        tmpUser.save()
-    except Exception:
-        return util.errorJsonWrapper("register 数据写入数据库出错")
+    checkRes = models.User.objects.filter(user_id=userId)
 
-    return util.simpleOkJsonWrapper()
+    if len(checkRes) == 0:
+        try:
+            tmpUser = models.User(user_id = userId, user_password = userPassword)
+            tmpUser.save()
+        except Exception:
+            return util.errorJsonWrapper("register 数据写入数据库出错")
+
+        return util.simpleOkJsonWrapper()
+    else:
+        return util.errorJsonWrapper("注册失败，该手机号已经被注册")
