@@ -23,8 +23,8 @@ post参数内容：
 '''
 
 def issueAdoptPetInfo(data):
-    ADOPT = 1
     EVENT_STATUS = 0
+    ADOPT = 1
     userId = data.get("user_id")
     user = models.User.objects.filter(user_id = userId).first()
     activityPic = data.get("activity_picture")
