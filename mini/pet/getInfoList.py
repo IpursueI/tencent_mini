@@ -4,12 +4,21 @@ import models
 import util
 import json
 import hashlib
-
+'''
+chayfan:通过token验证用户身份
+'''
 def getInfoList(data):
     try:
         userId = data["user_id"]
     except KeyError:
         return util.errorJsonWrapper("请求数据没有user_id字段")
+
+    usertoken = data.get("user_token")
+    if not usertoken:
+        return util.errorJsonWrapper("未传入token")        
+    checkToken = models.User.objects.filter(user_id=userId).first()
+    if usertoken != checkToken.user_token:
+        return util.errorJsonWrapper("token错误")
 
     try:
         activityType = data["activity_type"]

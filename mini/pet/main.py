@@ -6,15 +6,19 @@ import json
 import register
 import issueFosterPetInfo
 import getInfoList
+import completeUserInfo
 
 
 def index(request):
     if request.method == "POST":
-        return functionChoice(request.POST.get("method","postFormError"))
+        #return functionChoice(request.POST.get("method","postFormError"))
+        return functionChoice(request.POST, request.FILES)
     else:
         return HttpResponse(util.errorJsonWrapper("只支持POST方法"))
 
-def functionChoice(methodData):
+def functionChoice(post, files):
+    methodData = post.get("method", "postFormError")
+
     if methodData == "postFormError":
         return HttpResponse(util.errorJsonWrapper("post数据没有method字段"))
     else:
@@ -37,6 +41,8 @@ def functionChoice(methodData):
             return HttpResponse(issueFosterPetInfo.issueFosterPetInfo(funcArgs))
         elif funcName == "getInfoList":
             return HttpResponse(getInfoList.getInfoList(funcArgs))
+        elif funcName == "completeUserInfo":
+            return HttpResponse(completeUserInfo.completeUserInfo(funcArgs,files))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
 
