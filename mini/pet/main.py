@@ -5,6 +5,7 @@ import util
 import json
 import register
 import issueFosterPetInfo
+import getInfoList
 
 
 def index(request):
@@ -32,8 +33,10 @@ def functionChoice(methodData):
 
         if funcName == "register":
             return HttpResponse(register.register(funcArgs))
-        elif funcName == 'issueFosterPetInfo':
+        elif funcName == "issueFosterPetInfo":
             return HttpResponse(issueFosterPetInfo.issueFosterPetInfo(funcArgs))
+        elif funcName == "getInfoList":
+            return HttpResponse(getInfoList.getInfoList(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
 
