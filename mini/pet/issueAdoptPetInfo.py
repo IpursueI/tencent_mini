@@ -44,8 +44,8 @@ def issueAdoptPetInfo(data):
                                 activity_end_time = activityEndTime,
                                 activity_status = EVENT_STATUS)
     activity.save()
-    participant = models.Participant(participant_user_id = user,
-                                     participant_activity_id = activity,
+    participant = models.Participant(participant_user = user,
+                                     participant_activity = activity,
                                      participant_user_type = ADOPT)
     participant.save()
     return util.simpleOkJsonWrapper()
