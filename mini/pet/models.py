@@ -15,6 +15,7 @@ class User(models.Model):
     user_interest = models.IntegerField(default = 0)
     user_authenticated = models.BooleanField(default = False)
     user_authenticated_picture = models.ImageField(default="")
+    user_token = models.CharField(max_length = 100, default = "")
 
     def __unicode__(self):
         return self.user_id

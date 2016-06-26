@@ -24,15 +24,24 @@ post参数内容：{"name":"getAdoptDetailList","args":{"activity_id":xxx}}
 '''
 
 def getAdoptDetailList(data):
+
     activityId = data.get("activity_id")
     if not activityId:
         return util.errorJsonWrapper("收养详细信息获取请求错误,不存在该activity_id")
+
     activity = models.Activity.objects.get(pk = activityId)
     if not activity:
         return util.errorJsonWrapper("收养详细信息获取请求错误,不存在该活动")
+
     user = models.Participant.objects.filter(participant_activity = activity).first().participant_user
     if not user:
         return util.errorJsonWrapper("收养详细信息获取请求错误,不存在该用户")
+
+    # check token by stanwu
+    token = data.get("user_token")
+    if token != user.user_token:
+        return util.errorJsonWrapper("token错误")
+
     detailDict = {  "user_id" : user.user_id, "activity_picture" : activity.activity_picture, "user_avatar" : user.user_avatar,
                     "user_nickname" : user.user_nickname, "user_age" : user.user_age, "user_interest" : user.user_interest,
                     "activity_pet_type" : activity.activity_pet_type, "activity_price" : activity.activity_price,
@@ -40,9 +49,11 @@ def getAdoptDetailList(data):
                     "activity_start_time": activity.activity_start_time,
                     "activity_end_time": activity.activity_end_time
                     }
+
     retList = []
     retList.append(detailDict)
-    res = dict(retCode=0, retMsg="", retValue = retList)
+    res = dict(retCode = 0, retMsg = "", retValue = retList)
+
     return json.dumps(res)
 
 

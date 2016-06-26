@@ -29,6 +29,12 @@ def issueAdoptPetInfo(data):
     user = models.User.objects.filter(user_id = userId).first()
     if not user:
         return util.errorJsonWrapper("不存在该用户")
+
+    # check token by stanwu
+    token = data.get("user_token")
+    if token != user.user_token:
+        return util.errorJsonWrapper("token错误")
+
     activityPic = data.get("activity_picture")
     activityIntro = data.get("activity_introduction")
     activityAddr = data.get("activity_address")
@@ -38,6 +44,7 @@ def issueAdoptPetInfo(data):
     activityPrice = data.get("activity_price")
     activityStartTime = data.get("activity_start_time")
     activityEndTime = data.get("activity_end_time")
+
     try:
         activity = models.Activity( activity_introduction = activityIntro,
                                 activity_picture = activityPic,
@@ -50,6 +57,7 @@ def issueAdoptPetInfo(data):
         activity.save()
     except Exception:
         return util.errorJsonWrapper("发布收养信息出错，activity无法写入数据库")
+
     try:
         participant = models.Participant(participant_user = user,
                                      participant_activity = activity,
