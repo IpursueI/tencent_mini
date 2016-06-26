@@ -27,6 +27,8 @@ def issueAdoptPetInfo(data):
     ADOPT = 1
     userId = data.get("user_id")
     user = models.User.objects.filter(user_id = userId).first()
+    if not user:
+        return util.errorJsonWrapper("不存在该用户")
     activityPic = data.get("activity_picture")
     activityIntro = data.get("activity_introduction")
     activityAddr = data.get("activity_address")
@@ -34,19 +36,27 @@ def issueAdoptPetInfo(data):
     activityLati = data.get("activity_latitude")
     activityPet = data.get("activity_pet_type")
     activityPrice = data.get("activity_price")
-    activityStartTime = datetime.datetime.strptime(data.get("activity_start_time"), "%Y%m%d").date()
-    activityEndTime = datetime.datetime.strptime(data.get("activity_end_time"), "%Y%m%d").date()
-    activity = models.Activity( activity_introduction = activityIntro,
+    activityStartTime = data.get("activity_start_time")
+    activityEndTime = data.get("activity_end_time")
+    try:
+        activity = models.Activity( activity_introduction = activityIntro,
                                 activity_picture = activityPic,
                                 activity_price = activityPrice,
                                 activity_pet_type = activityPet,
                                 activity_start_time = activityStartTime,
                                 activity_end_time = activityEndTime,
-                                activity_status = EVENT_STATUS)
-    activity.save()
-    participant = models.Participant(participant_user = user,
+                                activity_status = EVENT_STATUS,
+                                activity_address = activityAddr)
+        activity.save()
+    except Exception:
+        return util.errorJsonWrapper("发布收养信息出错，activity无法写入数据库")
+    try:
+        participant = models.Participant(participant_user = user,
                                      participant_activity = activity,
                                      participant_user_type = ADOPT)
-    participant.save()
+        participant.save()
+    except Exception:
+        return util.errorJsonWrapper("发布收养信息出错，participant无法写入数据库")
+
     return util.simpleOkJsonWrapper()
 

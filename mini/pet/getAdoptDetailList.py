@@ -37,7 +37,12 @@ def getAdoptDetailList(data):
                     "user_nickname" : user.user_nickname, "user_age" : user.user_age, "user_interest" : user.user_interest,
                     "activity_pet_type" : activity.activity_pet_type, "activity_price" : activity.activity_price,
                     "activity_address": activity.activity_address, "activity_introduction": activity.activity_introduction,
-                    "activity_start_time": activity.activity_start_time, "activity_end_time": activity.activity_end_time
+                    "activity_start_time": activity.activity_start_time,
+                    "activity_end_time": activity.activity_end_time
                     }
-    return util.adoptDetailJsonWrapper(detailDict)
+    retList = []
+    retList.append(detailDict)
+    res = dict(retCode=0, retMsg="", retValue = retList)
+    return json.dumps(res)
+
 

@@ -8,13 +8,13 @@ class User(models.Model):
     user_gender = models.IntegerField(default=0)
     user_age = models.IntegerField(default=0)
     user_address = models.CharField(max_length = 200, default="")
-    user_avatar = models.ImageField(null = True)
+    user_avatar = models.BinaryField(default = b"\0x00")
     user_nickname = models.CharField(max_length = 20, default="")
     user_longitude = models.DecimalField(max_digits=6, decimal_places=3, default=0.0)
     user_latitude = models.DecimalField(max_digits=6, decimal_places=3, default=0.0)
     user_interest = models.IntegerField(default = 0)
     user_authenticated = models.BooleanField(default = False)
-    user_authenticated_picture = models.ImageField(null = True)
+    user_authenticated_picture = models.ImageField(default="")
 
     def __unicode__(self):
         return self.user_id
@@ -23,11 +23,12 @@ class User(models.Model):
 class Activity(models.Model):
     activity_title = models.CharField(max_length = 30, default="")
     activity_introduction = models.CharField(max_length = 300, default="")
-    activity_picture = models.ImageField(null = True)
-    activity_price = models.DecimalField(max_digits=20,decimal_places=2,default=0.0)
+    activity_address = models.CharField(max_length = 200, default="")
+    activity_picture = models.BinaryField(default = b"\0x00")
+    activity_price = models.IntegerField(default=0)
     activity_pet_type = models.IntegerField(default=0)
-    activity_start_time = models.DateField(null = True)
-    activity_end_time = models.DateField(null = True)
+    activity_start_time = models.CharField(max_length = 20, default="")
+    activity_end_time = models.CharField(max_length = 20, default="")
     activity_status = models.IntegerField(default = 0)
 
     def __unicode__(self):
@@ -39,4 +40,5 @@ class Participant(models.Model):
     participant_user_type = models.IntegerField(default = 0)
 
     def __unicode__(self):
-        return self.participant_activity
+        return str(self.participant_user)
+

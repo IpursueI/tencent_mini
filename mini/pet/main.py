@@ -6,6 +6,10 @@ import json
 import register
 import login
 import issueAdoptPetInfo
+import getAdoptDetailList
+import issueFosterPetInfo
+import getInfoList
+
 
 def index(request):
     if request.method == "POST":
@@ -36,6 +40,12 @@ def functionChoice(methodData):
             return HttpResponse(login.login(funcArgs))
         elif funcName == "issueAdoptPetInfo":
             return HttpResponse(issueAdoptPetInfo.issueAdoptPetInfo(funcArgs))
+        elif funcName == "getAdoptDetailList":
+            return HttpResponse(getAdoptDetailList.getAdoptDetailList(funcArgs))
+        elif funcName == "issueFosterPetInfo":
+            return HttpResponse(issueFosterPetInfo.issueFosterPetInfo(funcArgs))
+        elif funcName == "getInfoList":
+            return HttpResponse(getInfoList.getInfoList(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
 
