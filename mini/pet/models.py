@@ -34,9 +34,9 @@ class Activity(models.Model):
         return self.activity_introduction
 
 class Participant(models.Model):
-    participant_user_id = models.ForeignKey(User)
-    participant_activity_id = models.ForeignKey(Activity)
+    participant_user = models.ForeignKey(User)
+    participant_activity = models.ForeignKey(Activity)
     participant_user_type = models.IntegerField(default = 0)
 
     def __unicode__(self):
-        return self.participant_activity_id
+        return self.participant_activity
