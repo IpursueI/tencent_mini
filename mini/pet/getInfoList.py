@@ -4,12 +4,21 @@ import models
 import util
 import json
 import hashlib
-
+'''
+chayfan:通过token验证用户身份
+'''
 def getInfoList(data):
     try:
         userId = data["user_id"]
     except KeyError:
         return util.errorJsonWrapper("请求数据没有user_id字段")
+
+    usertoken = data.get("user_token")
+    if not usertoken:
+        return util.errorJsonWrapper("未传入token")        
+    checkToken = models.User.objects.filter(user_id=userId).first()
+    if usertoken != checkToken.user_token:
+        return util.errorJsonWrapper("token错误")
 
     try:
         activityType = data["activity_type"]
@@ -28,28 +37,32 @@ def getInfoList(data):
     
     resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=activityType)
 
-    retValue = []
-    for item in resList:
-        retValueItem = {}
-        userInfo = item.participant_user
-        activityInfo = item.participant_activity
+    try:
+        retValue = []
+        for item in resList:
+            retValueItem = {}
+            userInfo = item.participant_user
+            activityInfo = item.participant_activity
 
-        retValueItem["activity_id"] = activityInfo.pk
-        retValueItem["activity_picture"] = activityInfo.activity_picture
-        retValueItem['activity_price'] = activityInfo.activity_price
+            retValueItem["activity_id"] = activityInfo.pk
+            retValueItem["activity_picture"] = activityInfo.activity_picture
+            retValueItem['activity_price'] = activityInfo.activity_price
 
-        retValueItem["user_nickname"] = userInfo.user_nickname
-        retValueItem["user_avatar"] = userInfo.user_avatar
-        retValueItem["user_address"] = userInfo.user_address
+            retValueItem["user_nickname"] = userInfo.user_nickname
+            retValueItem["user_avatar"] = userInfo.user_avatar
+            retValueItem["user_address"] = userInfo.user_address
 
-        retValue.append(retValueItem)
+            retValue.append(retValueItem)
 
-    retValue = retValue[:number]
+        retValue = retValue[:number]
 
-    result = {}
+        result = {}
 
-    result["retValue"] = retValue
-    result["retCode"] = 0
-    result["retMsg"] = ""
+        result["retValue"] = retValue
+        result["retCode"] = 0
+        result["retMsg"] = ""
 
-    return json.dumps(result)
+        return json.dumps(result)
+    except Exception:
+
+        return util.errorJsonWrapper("请求信息列表失败")

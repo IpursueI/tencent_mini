@@ -4,20 +4,21 @@ from django.http import HttpResponse
 import util
 import json
 import register
-import login
-import issueAdoptPetInfo
-import getAdoptDetailList
 import issueFosterPetInfo
 import getInfoList
+import completeUserInfo
 
 
 def index(request):
     if request.method == "POST":
-        return functionChoice(request.POST.get("method","postFormError"))
+        #return functionChoice(request.POST.get("method","postFormError"))
+        return functionChoice(request.POST, request.FILES)
     else:
         return HttpResponse(util.errorJsonWrapper("只支持POST方法"))
 
-def functionChoice(methodData):
+def functionChoice(post, files):
+    methodData = post.get("method", "postFormError")
+
     if methodData == "postFormError":
         return HttpResponse(util.errorJsonWrapper("post数据没有method字段"))
     else:
@@ -36,16 +37,14 @@ def functionChoice(methodData):
 
         if funcName == "register":
             return HttpResponse(register.register(funcArgs))
-        elif funcName == "login":
-            return HttpResponse(login.login(funcArgs))
-        elif funcName == "issueAdoptPetInfo":
-            return HttpResponse(issueAdoptPetInfo.issueAdoptPetInfo(funcArgs))
-        elif funcName == "getAdoptDetailList":
-            return HttpResponse(getAdoptDetailList.getAdoptDetailList(funcArgs))
         elif funcName == "issueFosterPetInfo":
             return HttpResponse(issueFosterPetInfo.issueFosterPetInfo(funcArgs))
         elif funcName == "getInfoList":
             return HttpResponse(getInfoList.getInfoList(funcArgs))
+        elif funcName == "completeUserInfo":
+            return HttpResponse(completeUserInfo.completeUserInfo(funcArgs,files))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
+
+
 
