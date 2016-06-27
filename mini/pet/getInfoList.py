@@ -13,12 +13,14 @@ def getInfoList(data):
     except KeyError:
         return util.errorJsonWrapper("请求数据没有user_id字段")
 
-    usertoken = data.get("user_token")
-    if not usertoken:
-        return util.errorJsonWrapper("未传入token")        
-    checkToken = models.User.objects.filter(user_id=userId).first()
-    if usertoken != checkToken.user_token:
-        return util.errorJsonWrapper("token错误")
+    #为了方便调试暂时去掉token, removed by perryhuang
+
+    #usertoken = data.get("user_token")
+    #if not usertoken:
+    #    return util.errorJsonWrapper("未传入token")        
+    #checkToken = models.User.objects.filter(user_id=userId).first()
+    #if usertoken != checkToken.user_token:
+    #    return util.errorJsonWrapper("token错误")
 
     try:
         activityType = data["activity_type"]
@@ -54,7 +56,9 @@ def getInfoList(data):
 
             retValue.append(retValueItem)
 
-        retValue = retValue[:number]
+        #number小于0时默认返回全部数据
+        if number >= 0:
+            retValue = retValue[:number]
 
         result = {}
 
