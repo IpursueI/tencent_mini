@@ -8,6 +8,7 @@ import json
 import hashlib
 import mini.settings
 import time
+from django.conf import settings
 sys.path.append("..")
 
 def completeUserInfo(data, files):
@@ -50,8 +51,9 @@ def completeUserInfo(data, files):
             #FIllin.user_latitude = userLatitude
             FIllin.user_interest = userInterest
             
-            #保存头像
+            #保存头像地址
             FIllin.user_avatar = saveUserAvatar(files)
+            #return util.errorJsonWrapper(saveUserAvatar(files))
 
             FIllin.save()
 
@@ -68,15 +70,16 @@ def saveUserAvatar(files):
     if files:  #如果该request携带文件数据
         try:
             avatar = files["user_avatar"] #图像的key
-        except Exception:
-            return util.errorJsonWrapper("没有头像文件")
-
-        filePath = os.path.join(settings.MEDIA_ROOT,time.strftime("%Y%m%d%H%M%S")+avatar.name)
+            avatarSavedName = time.strftime("%Y%m%d%H%M%S")+avatar.name
+            filePath = os.path.join(settings.MEDIA_ROOT,avatarSavedName)
        
-        with open(filePath) as destination:
-            for chunk in avatar.chunks():
-                destination.write(chunk)
+            with open(filePath, 'wb+') as destination:
+                for chunk in avatar.chunks():
+                    destination.write(chunk)
+        except:
+            return ""
 
-        return filePath
+        avatarUrl = "media/"+avatarSavedName
+        return avatarUrl
     else:
         return ""
