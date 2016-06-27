@@ -4,9 +4,12 @@ from django.http import HttpResponse
 import util
 import json
 import register
+import completeUserInfo
+import login
+import issueAdoptPetInfo
 import issueFosterPetInfo
 import getInfoList
-import completeUserInfo
+import getAdoptDetailList
 
 
 def index(request):
@@ -37,14 +40,17 @@ def functionChoice(post, files):
 
         if funcName == "register":
             return HttpResponse(register.register(funcArgs))
+        elif funcName == "completeUserInfo":
+            return HttpResponse(completeUserInfo.completeUserInfo(funcArgs,files))
+        if funcName == "login":
+            return HttpResponse(login.login(funcArgs))
+        if funcName == "issueAdoptPetInfo":
+            return HttpResponse(issueAdoptPetInfo.issueAdoptPetInfo(funcArgs,files))
         elif funcName == "issueFosterPetInfo":
             return HttpResponse(issueFosterPetInfo.issueFosterPetInfo(funcArgs))
         elif funcName == "getInfoList":
             return HttpResponse(getInfoList.getInfoList(funcArgs))
-        elif funcName == "completeUserInfo":
-            return HttpResponse(completeUserInfo.completeUserInfo(funcArgs,files))
+        elif funcName == "getAdoptDetailList":
+            return HttpResponse(getAdoptDetailList.getAdoptDetailList(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))
-
-
-
