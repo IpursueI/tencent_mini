@@ -37,10 +37,10 @@ def getAdoptDetailList(data):
     if not user:
         return util.errorJsonWrapper("收养详细信息获取请求错误,不存在该用户")
 
-    # check token by stanwu
-    token = data.get("user_token")
-    if token != user.user_token:
-        return util.errorJsonWrapper("token错误")
+    # check token by stanwu 为了方便调试暂时注释掉
+    #token = data.get("user_token")
+    #if token != user.user_token:
+    #    return util.errorJsonWrapper("token错误")
 
     detailDict = {  "user_id" : user.user_id, "activity_picture" : activity.activity_picture, "user_avatar" : user.user_avatar,
                     "user_nickname" : user.user_nickname, "user_age" : user.user_age, "user_interest" : user.user_interest,

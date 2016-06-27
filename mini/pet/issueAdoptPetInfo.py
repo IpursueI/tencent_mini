@@ -5,12 +5,15 @@ import datetime
 import util
 import json
 import hashlib
+import time
+import os
+from django.conf import settings
 
 '''
-发布收养信息：by stanwu, 2016/06/25
+发布收养信息：by stanwu, 2016/06/25  --> modify by perryhuang, 2016/06/27 , add save activity_picture function
 post参数名：method
 post参数内容：
-	{"name":"issueAdoptPetInfo","args":{"user_id":"xxx","activity_picture":xxx, "activity_introduction":"xxx",
+	{"name":"issueAdoptPetInfo","args":{"user_id":"xxx","activity_introduction":"xxx",
  	"activity_address":"xxx","activity_longitude":"xxx","activity_latitude":"xxx",
 	"activity_pet_type":xxx,"activity_price":xxx,
 	"activity_start_time":"xxx", "activity_end_time":"xxx"}}
@@ -22,7 +25,7 @@ post参数内容：
     {"retValue": "", "retCode": -1, "retMsg": "xxxxx"}
 '''
 
-def issueAdoptPetInfo(data):
+def issueAdoptPetInfo(data,files):
     EVENT_STATUS = 0
     ADOPT = 1
     userId = data.get("user_id")
@@ -31,11 +34,10 @@ def issueAdoptPetInfo(data):
         return util.errorJsonWrapper("不存在该用户")
 
     # check token by stanwu
-    token = data.get("user_token")
-    if token != user.user_token:
-        return util.errorJsonWrapper("token错误")
+    #token = data.get("user_token")
+    #if token != user.user_token:
+    #    return util.errorJsonWrapper("token错误")
 
-    activityPic = data.get("activity_picture")
     activityIntro = data.get("activity_introduction")
     activityAddr = data.get("activity_address")
     activityLongi = data.get("activity_longitude")
@@ -44,8 +46,11 @@ def issueAdoptPetInfo(data):
     activityPrice = data.get("activity_price")
     activityStartTime = data.get("activity_start_time")
     activityEndTime = data.get("activity_end_time")
+    activityPic = saveActivityPicture(files)
+    #return util.errorJsonWrapper(saveActivityPicture(files))
 
     try:
+
         activity = models.Activity( activity_introduction = activityIntro,
                                 activity_picture = activityPic,
                                 activity_price = activityPrice,
@@ -68,3 +73,21 @@ def issueAdoptPetInfo(data):
 
     return util.simpleOkJsonWrapper()
 
+
+def saveActivityPicture(files):
+    if files:
+        try:
+            picture = files["activity_picture"]
+            pictureSavedName = time.strftime("%Y%m%d%H%M%S")+picture.name
+            filePath = os.path.join(settings.MEDIA_ROOT,pictureSavedName)
+
+            with open(filePath, 'wb+') as destination:
+                for chunk in picture.chunks():
+                    destination.write(chunk)
+        except:
+            return ""
+
+        pictureUrl = "media/"+pictureSavedName
+        return pictureUrl
+    else:
+        return ""
