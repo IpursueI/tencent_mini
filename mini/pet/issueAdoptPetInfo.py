@@ -16,7 +16,9 @@ post参数内容：
 	{"name":"issueAdoptPetInfo","args":{"user_id":"xxx","activity_introduction":"xxx",
  	"activity_address":"xxx","activity_longitude":"xxx","activity_latitude":"xxx",
 	"activity_pet_type":xxx,"activity_price":xxx,
-	"activity_start_time":"xxx", "activity_end_time":"xxx"}}
+	"activity_start_time":"xxx", "activity_end_time":"xxx","user_token" : "xxx"}}
+
+token用作身份验证,token验证错误，则无法访问
 
 服务器返回值(json格式):
     注册成功：
