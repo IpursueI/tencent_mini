@@ -6,7 +6,6 @@ import models
 import util
 import json
 import hashlib
-import mini.settings
 import time
 from django.conf import settings
 sys.path.append("..")
