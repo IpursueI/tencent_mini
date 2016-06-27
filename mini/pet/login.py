@@ -6,6 +6,7 @@ import json
 import hashlib
 import datetime
 import time
+
 '''
 登陆功能：by stanwu, 2016/06/25
 
@@ -18,7 +19,10 @@ post参数内容：{"name":"login", "args":{"user_id":"15666666666", "user_passw
     注册失败：
     {"retValue": "", "retCode": -1, "retMsg": "xxxxx"}
 
+token用作身份验证,token验证错误，则无法访问
+
 chayfan修改: 加入token验证，若token过期，进行密码登录，同时更新token值与tokenoverdue值
+
 '''
 def login(data):
     userID = data.get("user_id")

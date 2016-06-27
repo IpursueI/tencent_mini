@@ -9,7 +9,9 @@ import hashlib
 '''
 获取详细收养信息, by stanwu 2016/06/26
 post参数名：method
-post参数内容：{"name":"getAdoptDetailList","args":{"activity_id":xxx}}
+post参数内容：{"name":"getAdoptDetailList","args":{"activity_id":xxx, "user_token" : "xxx"}}
+
+token用作身份验证,token验证错误，则无法访问
 
 服务器返回值(json格式)：
     请求失败：
@@ -52,7 +54,7 @@ def getAdoptDetailList(data):
 
     retList = []
     retList.append(detailDict)
-    res = dict(retCode = 0, retMsg = "", retValue = retList)
+    res = dict(retCode = 0, retMsg = "", retValue = detailDict)
 
     return json.dumps(res)
 
