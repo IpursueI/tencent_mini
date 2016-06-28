@@ -51,7 +51,8 @@ def completeUserInfo(data, files):
             FIllin.user_interest = userInterest
             
             #保存头像地址
-            FIllin.user_avatar = saveUserAvatar(files)
+            #FIllin.user_avatar = saveUserAvatar(files)
+            FIllin.user_avatar = util.savePicture(files,"user_avatar")
             #return util.errorJsonWrapper(saveUserAvatar(files))
 
             FIllin.save()
@@ -65,20 +66,22 @@ def completeUserInfo(data, files):
         return util.errorJsonWrapper("该用户不存在")
 
 
-def saveUserAvatar(files):
-    if files:  #如果该request携带文件数据
-        try:
-            avatar = files["user_avatar"] #图像的key
-            avatarSavedName = time.strftime("%Y%m%d%H%M%S")+avatar.name
-            filePath = os.path.join(settings.MEDIA_ROOT,avatarSavedName)
-       
-            with open(filePath, 'wb+') as destination:
-                for chunk in avatar.chunks():
-                    destination.write(chunk)
-        except:
-            return ""
-
-        avatarUrl = "media/"+avatarSavedName
-        return avatarUrl
-    else:
-        return ""
+#def saveUserAvatar(files):
+#    if files:  #如果该request携带文件数据
+#        try:
+#            avatar = files["user_avatar"] #图像的key
+#            avatarSavedName = time.strftime("%Y%m%d%H%M%S")+avatar.name
+#            nameList = avatarSavedName.split('.')
+#            avatarSavedName = hashlib.md5(nameList[0]).hexdigest()+"."+nameList[1]
+#            filePath = os.path.join(settings.MEDIA_ROOT,avatarSavedName)
+#       
+#            with open(filePath, 'wb+') as destination:
+#                for chunk in avatar.chunks():
+#                    destination.write(chunk)
+#        except:
+#            return ""
+#
+#        avatarUrl = "media/"+avatarSavedName
+#        return avatarUrl
+#    else:
+#        return ""

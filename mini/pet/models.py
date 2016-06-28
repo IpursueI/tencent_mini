@@ -13,7 +13,7 @@ class User(models.Model):
     user_latitude = models.CharField(max_length = 20, default = "")
     user_interest = models.IntegerField(default = 0)
     user_authenticated = models.BooleanField(default = False)
-    user_authenticated_picture = models.ImageField(default="")
+    user_authenticated_picture = models.CharField(max_length = 200, default="")
     user_token = models.CharField(max_length = 100, default="")
     user_token_overdue = models.CharField(max_length = 100, default="")
 

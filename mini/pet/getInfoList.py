@@ -36,8 +36,12 @@ def getInfoList(data):
         sortType = data["sort_type"]
     except KeyError:
         return util.errorJsonWrapper("请求数据没有sort_type字段")
-    
-    resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=activityType)
+
+    if activityType == 3:
+        resList = intelligentSort(userId, sortType)
+        #resList = models.Participant.objects.filter(participant_user_type=activityType)
+    else:
+        resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=activityType)
 
     try:
         retValue = []
@@ -80,3 +84,10 @@ def getInfoList(data):
     except Exception:
 
         return util.errorJsonWrapper("请求信息列表失败")
+
+def intelligentSort(userId, sortType):
+    user = models.User.objects.filter(user_id = userId)
+    if sortType == 1:
+        ret = models.Participant.objects.filter(participant_user_type=1, participant_user__user_gender=2-user[0].user_gender)
+        return ret
+

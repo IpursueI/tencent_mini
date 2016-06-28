@@ -33,11 +33,14 @@ def issueAdoptPetInfo(data,files):
     if not user:
         return util.errorJsonWrapper("不存在该用户")
 
+    if not user.user_authenticated:
+        return util.errorJsonWrapper("用户还没有认证，不能发布收养信息")
+
     # check token by stanwu
     #token = data.get("user_token")
     #if token != user.user_token:
     #    return util.errorJsonWrapper("token错误")
-
+    
     activityIntro = data.get("activity_introduction")
     activityAddr = data.get("activity_address")
     activityLongi = data.get("activity_longitude")
@@ -46,7 +49,8 @@ def issueAdoptPetInfo(data,files):
     activityPrice = data.get("activity_price")
     activityStartTime = data.get("activity_start_time")
     activityEndTime = data.get("activity_end_time")
-    activityPic = saveActivityPicture(files)
+    #activityPic = saveActivityPicture(files)
+    activityPic = util.savePicture(files,"activity_picture")
     #return util.errorJsonWrapper(saveActivityPicture(files))
 
     try:
@@ -74,20 +78,22 @@ def issueAdoptPetInfo(data,files):
     return util.simpleOkJsonWrapper()
 
 
-def saveActivityPicture(files):
-    if files:
-        try:
-            picture = files["activity_picture"]
-            pictureSavedName = time.strftime("%Y%m%d%H%M%S")+picture.name
-            filePath = os.path.join(settings.MEDIA_ROOT,pictureSavedName)
-
-            with open(filePath, 'wb+') as destination:
-                for chunk in picture.chunks():
-                    destination.write(chunk)
-        except:
-            return ""
-
-        pictureUrl = "media/"+pictureSavedName
-        return pictureUrl
-    else:
-        return ""
+#def saveActivityPicture(files):
+#    if files:
+#        try:
+#            picture = files["activity_picture"]
+#            pictureSavedName = time.strftime("%Y%m%d%H%M%S")+picture.name
+#            nameList = pictureSavedName.split('.')
+#            pictureSavedName = hashlib.md5(nameList[0]).hexdigest()+"."+nameList[1]
+#            filePath = os.path.join(settings.MEDIA_ROOT,pictureSavedName)
+#
+#            with open(filePath, 'wb+') as destination:
+#                for chunk in picture.chunks():
+#                    destination.write(chunk)
+#        except:
+#            return ""
+#
+#        pictureUrl = "media/"+pictureSavedName
+#        return pictureUrl
+#    else:
+#        return ""

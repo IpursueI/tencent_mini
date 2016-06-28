@@ -10,6 +10,7 @@ import issueAdoptPetInfo
 import issueFosterPetInfo
 import getInfoList
 import getAdoptDetailList
+import authenticateUser
 
 
 def index(request):
@@ -52,5 +53,7 @@ def functionChoice(post, files):
             return HttpResponse(getInfoList.getInfoList(funcArgs))
         elif funcName == "getAdoptDetailList":
             return HttpResponse(getAdoptDetailList.getAdoptDetailList(funcArgs))
+        elif funcName == "authenticateUser":
+            return HttpResponse(authenticateUser.authenticateUser(funcArgs,files))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))

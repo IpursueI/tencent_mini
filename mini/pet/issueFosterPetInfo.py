@@ -25,7 +25,7 @@ def issueFosterPetInfo(data):
 
 
     try:
-        tmpParticipant = models.Participant(participant_user_id = checkUserId[0], participant_activity_id=checkActivityId[0], participant_user_type=2)
+        tmpParticipant = models.Participant(participant_user = checkUserId[0], participant_activity = checkActivityId[0], participant_user_type=2)
         tmpParticipant.save()
         return util.simpleOkJsonWrapper()
     except Exception:
