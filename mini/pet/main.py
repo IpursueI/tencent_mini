@@ -42,9 +42,9 @@ def functionChoice(post, files):
             return HttpResponse(register.register(funcArgs))
         elif funcName == "completeUserInfo":
             return HttpResponse(completeUserInfo.completeUserInfo(funcArgs,files))
-        if funcName == "login":
+        elif funcName == "login":
             return HttpResponse(login.login(funcArgs))
-        if funcName == "issueAdoptPetInfo":
+        elif funcName == "issueAdoptPetInfo":
             return HttpResponse(issueAdoptPetInfo.issueAdoptPetInfo(funcArgs,files))
         elif funcName == "issueFosterPetInfo":
             return HttpResponse(issueFosterPetInfo.issueFosterPetInfo(funcArgs))
