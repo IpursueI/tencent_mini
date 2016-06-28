@@ -1,0 +1,25 @@
+[27/Jun/2016 15:33:28]"GET /pet/ HTTP/1.1" 200 79
+[27/Jun/2016 15:33:28]"POST /pet/ HTTP/1.1" 200 424
+[27/Jun/2016 15:33:37]"POST /pet/ HTTP/1.1" 200 5096
+[27/Jun/2016 16:06:07]"GET http://www.baidu.com/cache/global/img/gs.gif HTTP/1.1" 404 1729
+[27/Jun/2016 16:07:29]"GET http://www.baidu.com/cache/global/img/gs.gif HTTP/1.1" 404 1729
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/SocketServer.py", line 593, in process_request_thread
+    self.finish_request(request, client_address)
+  File "/usr/lib/python2.7/SocketServer.py", line 334, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+  File "/usr/local/lib/python2.7/dist-packages/django/core/servers/basehttp.py", line 102, in __init__
+    super(WSGIRequestHandler, self).__init__(*args, **kwargs)
+  File "/usr/lib/python2.7/SocketServer.py", line 649, in __init__
+    self.handle()
+  File "/usr/local/lib/python2.7/dist-packages/django/core/servers/basehttp.py", line 167, in handle
+    self.raw_requestline = self.rfile.readline(65537)
+  File "/usr/lib/python2.7/socket.py", line 476, in readline
+    data = self._sock.recv(self._rbufsize)
+error: [Errno 104] Connection reset by peer
+[27/Jun/2016 17:16:17]"GET / HTTP/1.0" 404 2018
+[27/Jun/2016 20:05:24]"GET http://www.baidu.com/cache/global/img/gs.gif HTTP/1.1" 404 1729
+[27/Jun/2016 20:43:06]"GET http://www.izhongsai.com/ HTTP/1.1" 404 1676
+[27/Jun/2016 20:57:29]"GET http://www.baidu.com/cache/global/img/gs.gif HTTP/1.1" 404 1729
+[27/Jun/2016 22:50:31]"GET / HTTP/1.1" 404 2009
+[28/Jun/2016 00:57:41]"GET http://www.baidu.com/ HTTP/1.1" 404 1660

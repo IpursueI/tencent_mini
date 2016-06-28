@@ -48,11 +48,21 @@ def getInfoList(data):
 
             retValueItem["activity_id"] = activityInfo.pk
             retValueItem["activity_picture"] = activityInfo.activity_picture
+            retValueItem['activity_address'] = activityInfo.activity_address
             retValueItem['activity_price'] = activityInfo.activity_price
+            retValueItem['activity_introduction'] = activityInfo.activity_introduction
+            retValueItem['activity_pet_type'] = activityInfo.activity_pet_type
+            retValueItem['activity_start_time'] = activityInfo.activity_start_time
+            retValueItem['activity_end_time'] = activityInfo.activity_end_time
+            
 
             retValueItem["user_nickname"] = userInfo.user_nickname
             retValueItem["user_avatar"] = userInfo.user_avatar
             retValueItem["user_address"] = userInfo.user_address
+            retValueItem["user_age"] = userInfo.user_age
+            retValueItem["user_interest"] = userInfo.user_interest
+            retValueItem["user_gender"] = userInfo.user_gender
+            retValueItem["user_authenticated"] = userInfo.user_authenticated
 
             retValue.append(retValueItem)
 

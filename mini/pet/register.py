@@ -24,7 +24,7 @@ def register(data):
 
         token = hashlib.md5(userId + userPassword + str(datetime.datetime.now())).hexdigest()
 
-        tokenoverdue = str(datetime.datetime.now() + datetime.timedelta(seconds = 30))
+        tokenoverdue = str(datetime.datetime.now() + datetime.timedelta(days = 3))
 
         checkRes = models.User.objects.filter(user_id=userId)
     except:

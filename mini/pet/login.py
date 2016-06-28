@@ -45,7 +45,7 @@ def login(data):
             else:
                 token = hashlib.md5(userID + password + str(datetime.datetime.now())).hexdigest()
                 user.user_token = token
-                user.user_token_overdue = str(datetime.datetime.now() + datetime.timedelta(seconds = 30))
+                user.user_token_overdue = str(datetime.datetime.now() + datetime.timedelta(days = 3))
                 user.save()
                 tokenDict = {"user_token" : token}
                 #retList = []
