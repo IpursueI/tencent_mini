@@ -8,6 +8,13 @@ import hashlib
 chayfan:通过token验证用户身份
 '''
 def getInfoList(data):
+
+    MAINPAGE = 1
+    ALLADOPTLIST = 2
+    ALLFOSTERLIST = 3
+    USERADOPTLIST = 4
+    USERFOSTERLIST = 5
+
     try:
         userId = data["user_id"]
     except KeyError:
@@ -37,11 +44,16 @@ def getInfoList(data):
     except KeyError:
         return util.errorJsonWrapper("请求数据没有sort_type字段")
 
-    if activityType == 3:
-        resList = intelligentSort(userId, sortType)
-        #resList = models.Participant.objects.filter(participant_user_type=activityType)
-    else:
-        resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=activityType)
+    if activityType == MAINPAGE:
+        resList = util.intelligentSort(userId, sortType)
+    elif activityType == ALLADOPTLIST: 
+        resList = models.Participant.objects.filter(participant_user_type=1)
+    elif activityType == ALLFOSTERLIST: 
+        resList = models.Participant.objects.filter(participant_user_type=2)
+    elif activityType == USERADOPTLIST: 
+        resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=1)
+    elif activityType == USERFOSTERLIST: 
+        resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=2)
 
     try:
         retValue = []
@@ -84,10 +96,4 @@ def getInfoList(data):
     except Exception:
 
         return util.errorJsonWrapper("请求信息列表失败")
-
-def intelligentSort(userId, sortType):
-    user = models.User.objects.filter(user_id = userId)
-    if sortType == 1:
-        ret = models.Participant.objects.filter(participant_user_type=1, participant_user__user_gender=2-user[0].user_gender)
-        return ret
 

@@ -11,6 +11,7 @@ import issueFosterPetInfo
 import getInfoList
 import getAdoptDetailList
 import authenticateUser
+import logout
 
 
 def index(request):
@@ -55,5 +56,7 @@ def functionChoice(post, files):
             return HttpResponse(getAdoptDetailList.getAdoptDetailList(funcArgs))
         elif funcName == "authenticateUser":
             return HttpResponse(authenticateUser.authenticateUser(funcArgs,files))
+        elif funcName == "logout":
+            return HttpResponse(logout.logout(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))

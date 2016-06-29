@@ -32,14 +32,14 @@ def login(data):
         if token:
             if str(datetime.datetime.now()) < user.user_token_overdue:
                 if token == user.user_token:
-                    return util.simpleOkJsonWrapper()
+                    return getUserInfo(user,token)
                 else:
                     return util.errorJsonWrapper("token错误")
             else:
                 return util.errorJsonWrapper("token已过期")
 
 
-        if password:
+        else:
             if user.user_password != hashlib.md5(password).hexdigest():
                 return util.errorJsonWrapper("密码错误")
             else:
@@ -47,16 +47,19 @@ def login(data):
                 user.user_token = token
                 user.user_token_overdue = str(datetime.datetime.now() + datetime.timedelta(days = 3))
                 user.save()
-                #tokenDict = {"user_token" : token}
-                retValueItem = {}
-                retValueItem['user_token'] = token
-                retValueItem["user_nickname"] = user.user_nickname
-                retValueItem["user_avatar"] = user.user_avatar
-                retValueItem["user_address"] = user.user_address
-                retValueItem["user_age"] = user.user_age
-                retValueItem["user_interest"] = user.user_interest
-                retValueItem["user_gender"] = user.user_gender
-                retValueItem["user_authenticated"] = user.user_authenticated
-                res = dict(retCode=0, retMsg="", retValue = retValueItem)
+                
+                return getUserInfo(user, token)
 
-                return json.dumps(res)
+def getUserInfo(user, token):
+    retValueItem = {}
+    retValueItem['user_token'] = token
+    retValueItem["user_nickname"] = user.user_nickname
+    retValueItem["user_avatar"] = user.user_avatar
+    retValueItem["user_address"] = user.user_address
+    retValueItem["user_age"] = user.user_age
+    retValueItem["user_interest"] = user.user_interest
+    retValueItem["user_gender"] = user.user_gender
+    retValueItem["user_authenticated"] = user.user_authenticated
+    res = dict(retCode=0, retMsg="", retValue = retValueItem)
+
+    return json.dumps(res)

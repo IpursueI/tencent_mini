@@ -17,6 +17,15 @@ def completeUserInfo(data, files):
         return util.errorJsonWrapper("注册数据没有user_id字段")
 
     try:
+        userToken = data["user_token"]
+    except KeyError:
+        return util.errorJsonWrapper("注册数据没有user_token字段")
+
+    #return util.checkToken(userId,userToken)
+    if not util.checkToken(userId, userToken):
+        return util.errorJsonWrapper("token 验证失败")
+
+    try:
         userGender = data["user_gender"]
     except KeyError:
         return util.errorJsonWrapper("注册数据没有user_gender字段")
@@ -45,7 +54,7 @@ def completeUserInfo(data, files):
             FIllin.user_gender = userGender
             FIllin.user_age = userAge
             FIllin.user_address = userAddress
-            FIllin.user_nikename = userNickname
+            FIllin.user_nickname = userNickname
             #FIllin.user_longitude = userLongitude
             #FIllin.user_latitude = userLatitude
             FIllin.user_interest = userInterest

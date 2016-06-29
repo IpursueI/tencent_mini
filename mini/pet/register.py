@@ -36,11 +36,19 @@ def register(data):
             tmpUser.save()
         except Exception:
             return util.errorJsonWrapper("register 数据写入数据库出错")
-        tokenDict = {"user_token" : token}
-        #retList = []
-        #retList.append(tokenDict)
-        res = dict(retCode=0, retMsg="", retValue = tokenDict)
+        #tokenDict = {"user_token" : token}
+
+        retValueItem = {}
+        retValueItem['user_token'] = token
+        retValueItem["user_nickname"] = ""
+        retValueItem["user_avatar"] = ""
+        retValueItem["user_address"] = ""
+        retValueItem["user_age"] = 0
+        retValueItem["user_interest"] = 0
+        retValueItem["user_gender"] = 0
+        retValueItem["user_authenticated"] = False
+        res = dict(retCode=0, retMsg="", retValue = retValueItem)
+
         return json.dumps(res)
-        #return util.simpleOkJsonWrapper()
     else:
         return util.errorJsonWrapper("注册失败，该手机号已经被注册")

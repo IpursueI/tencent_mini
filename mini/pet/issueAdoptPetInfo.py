@@ -26,7 +26,7 @@ post参数内容：
 '''
 
 def issueAdoptPetInfo(data,files):
-    EVENT_STATUS = 0
+    EVENT_STATUS = 1
     ADOPT = 1
     userId = data.get("user_id")
     user = models.User.objects.filter(user_id = userId).first()
@@ -34,7 +34,7 @@ def issueAdoptPetInfo(data,files):
         return util.errorJsonWrapper("不存在该用户")
 
     if not user.user_authenticated:
-        return util.errorJsonWrapper("用户还没有认证，不能发布收养信息")
+        return util.errorJsonWrapper("failed")
 
     # check token by stanwu
     #token = data.get("user_token")
@@ -49,23 +49,24 @@ def issueAdoptPetInfo(data,files):
     activityPrice = data.get("activity_price")
     activityStartTime = data.get("activity_start_time")
     activityEndTime = data.get("activity_end_time")
-    #activityPic = saveActivityPicture(files)
     activityPic = util.savePicture(files,"activity_picture")
     #return util.errorJsonWrapper(saveActivityPicture(files))
 
-    try:
+    #try:
 
-        activity = models.Activity( activity_introduction = activityIntro,
+    activity = models.Activity(activity_introduction = activityIntro,
                                 activity_picture = activityPic,
                                 activity_price = activityPrice,
                                 activity_pet_type = activityPet,
                                 activity_start_time = activityStartTime,
                                 activity_end_time = activityEndTime,
                                 activity_status = EVENT_STATUS,
+                                activity_latitude = activityLati,
+                                activity_longitude = activityLongi,
                                 activity_address = activityAddr)
-        activity.save()
-    except Exception:
-        return util.errorJsonWrapper("发布收养信息出错，activity无法写入数据库")
+    activity.save()
+    #except Exception:
+        #return util.errorJsonWrapper("发布收养信息出错，activity无法写入数据库")
 
     try:
         participant = models.Participant(participant_user = user,

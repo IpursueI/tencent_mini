@@ -26,6 +26,8 @@ class Activity(models.Model):
     activity_introduction = models.CharField(max_length = 300, default="")
     activity_address = models.CharField(max_length = 200, default="")
     activity_picture = models.CharField(max_length = 200, default="")
+    activity_longitude = models.CharField(max_length = 20, default = "")
+    activity_latitude = models.CharField(max_length = 20, default = "")
     activity_price = models.IntegerField(default=0)
     activity_pet_type = models.IntegerField(default=0)
     activity_start_time = models.CharField(max_length = 100, default="")
