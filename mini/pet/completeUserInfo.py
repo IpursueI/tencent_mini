@@ -61,7 +61,10 @@ def completeUserInfo(data, files):
             
             #保存头像地址
             #FIllin.user_avatar = saveUserAvatar(files)
-            FIllin.user_avatar = util.savePicture(files,"user_avatar")
+            picName = util.savePicture(files,"user_avatar",2*1024*1024)
+            if picName == -1:
+                return util.errorJsonWrapper("图片格式错误，只支持小于2.5M的jpg,jpeg,png")
+            FIllin.user_avatar = picName 
             #return util.errorJsonWrapper(saveUserAvatar(files))
 
             FIllin.save()

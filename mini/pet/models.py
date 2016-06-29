@@ -41,3 +41,4 @@ class Participant(models.Model):
     participant_user = models.ForeignKey(User)
     participant_activity = models.ForeignKey(Activity)
     participant_user_type = models.IntegerField(default = 0)
+    participant_status = models.IntegerField(default = 0)

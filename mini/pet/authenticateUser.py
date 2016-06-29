@@ -17,7 +17,11 @@ def authenticateUser(data, files):
 
     if user:
         try:
-            user.user_authenticated_picture = util.savePicture(files,"user_authenticated_picture")
+            #user.user_authenticated_picture = util.savePicture(files,"user_authenticated_picture")
+            picName = util.savePicture(files,"user_authenticated_picture",20*1024*1024)
+            if picName == -1:
+                return util.errorJsonWrapper("图片格式错误，只支持小于20M的jpg,jpeg,png")
+            user.user_authenticated_picture = picName 
             user.user_authenticated = True
             user.save()
 

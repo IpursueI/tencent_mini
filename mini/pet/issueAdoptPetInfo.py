@@ -49,12 +49,17 @@ def issueAdoptPetInfo(data,files):
     activityPrice = data.get("activity_price")
     activityStartTime = data.get("activity_start_time")
     activityEndTime = data.get("activity_end_time")
-    activityPic = util.savePicture(files,"activity_picture")
-    #return util.errorJsonWrapper(saveActivityPicture(files))
+    activityStartTime = time.strftime("%Y-%m-%d",(time.strptime(activityStartTime,"%Y-%m-%d")))
+    activityEndTime = time.strftime("%Y-%m-%d",(time.strptime(activityEndTime,"%Y-%m-%d")))
 
-    #try:
+    picName = util.savePicture(files,"activity_picture",20*1024*1024)
+    if picName == -1:
+        return util.errorJsonWrapper("图片格式错误，只支持小于20M的jpg,jpeg,png")
+    activityPic = picName 
 
-    activity = models.Activity(activity_introduction = activityIntro,
+    try:
+
+        activity = models.Activity(activity_introduction = activityIntro,
                                 activity_picture = activityPic,
                                 activity_price = activityPrice,
                                 activity_pet_type = activityPet,
@@ -64,9 +69,9 @@ def issueAdoptPetInfo(data,files):
                                 activity_latitude = activityLati,
                                 activity_longitude = activityLongi,
                                 activity_address = activityAddr)
-    activity.save()
-    #except Exception:
-        #return util.errorJsonWrapper("发布收养信息出错，activity无法写入数据库")
+        activity.save()
+    except Exception:
+        return util.errorJsonWrapper("发布收养信息出错，activity无法写入数据库")
 
     try:
         participant = models.Participant(participant_user = user,

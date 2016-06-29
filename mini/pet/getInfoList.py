@@ -44,10 +44,10 @@ def getInfoList(data):
     except KeyError:
         return util.errorJsonWrapper("请求数据没有sort_type字段")
 
-    if activityType == MAINPAGE:
+    if activityType == MAINPAGE or activityType == ALLADOPTLIST:
         resList = util.intelligentSort(userId, sortType)
-    elif activityType == ALLADOPTLIST: 
-        resList = models.Participant.objects.filter(participant_user_type=1)
+    #elif activityType == ALLADOPTLIST: 
+        #resList = models.Participant.objects.filter(participant_user_type=1)
     elif activityType == ALLFOSTERLIST: 
         resList = models.Participant.objects.filter(participant_user_type=2)
     elif activityType == USERADOPTLIST: 
