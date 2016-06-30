@@ -25,7 +25,7 @@ def index(request):
 
 def functionChoice(post, files):
     methodData = post.get("method", "postFormError")
-
+    #return HttpResponse(json.dumps(post))
     if methodData == "postFormError":
         return HttpResponse(util.errorJsonWrapper("post数据没有method字段"))
     else:

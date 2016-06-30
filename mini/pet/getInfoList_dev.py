@@ -57,23 +57,23 @@ def getInfoList(data):
     except KeyError:
         return util.errorJsonWrapper("请求数据没有pet_type字段")
 
-    resList = models.Participant.objects.all()
+    #resList = models.Participant.objects.all()
 
     if functionType == RECOMMEND_FUNC:
         if recommend_Type == DEFAULT_RECOM:
-            resList = models.Participant.objects.all()
+            resList = models.Participant.objects.filter(participant_user_type=1)
         else:
             resList = intelligentSort(userId, recommend_Type)
 
     elif functionType == FILTER_FUNC:
         if gender == GENDER_ALL and petType == PET_ALL:
-            resList = models.Participant.objects.all()
+            resList = models.Participant.objects.filter(participant_user_type=1)
         elif gender == GENDER_ALL:
-            resList = models.Participant.objects.filter(participant_activity__activity_pet_type=pet_type)
+            resList = models.Participant.objects.filter(participant_activity__activity_pet_type=pet_type,participant_user_type=1)
         elif petType == PET_ALL:
-            resList = models.Participant.objects.filter(participant_user__user_gender=gender)
+            resList = models.Participant.objects.filter(participant_user__user_gender=gender,participant_user_type=1)
         else:
-            resList = models.Participant.objects.filter(participant_activity__activity_pet_type=petType,participant_user__user_gender=gender)            
+            resList = models.Participant.objects.filter(participant_activity__activity_pet_type=petType,participant_user__user_gender=gender,participant_user_type=1)            
 
     try:
         retValue = []
@@ -92,6 +92,7 @@ def getInfoList(data):
             retValueItem['activity_end_time'] = activityInfo.activity_end_time
                 
 
+            retValueItem["user_id"] = userInfo.user_id
             retValueItem["user_nickname"] = userInfo.user_nickname
             retValueItem["user_avatar"] = userInfo.user_avatar
             retValueItem["user_address"] = userInfo.user_address
@@ -122,7 +123,11 @@ def intelligentSort(userId, sortType):
 
         if sortType == PRICE_RECOM:
             partList = models.Participant.objects.order_by('participant_activity__activity_price')
-            return partList
+            partListNew = []
+            for part in partList:
+                if part.participant_user_type == 1:
+                    partListNew.append(part)
+            return partListNew
 
         elif sortType == INTEREST_RECOM:
             tag = user.user_interest

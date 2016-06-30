@@ -49,64 +49,69 @@ def getUserInfoList(data):
             activityInfo = item.participant_activity
             userTypeInfo = item.participant_user_type
 
-            tmpList.extend(models.Participant.objects.filter(participant_activity = activityInfo, participant_user_type = 2))
+            tmpList.append(models.Participant.objects.filter(participant_activity = activityInfo, participant_user_type = 2)[0])
         
         resList = tmpList
             
     elif activityType == USERFOSTERLIST: 
         resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=2)
+        resListStatus = []
+        for item in resList:
+            resListStatus.append(item.participant_status)
+
         tmpList= []
         for item in resList:
             userInfo = item.participant_user
             activityInfo = item.participant_activity
             userTypeInfo = item.participant_user_type
 
-            tmpList.extend(models.Participant.objects.filter(participant_activity = activityInfo, participant_user_type = 1))
+            tmpList.append(models.Participant.objects.filter(participant_activity = activityInfo, participant_user_type = 1)[0])
         
         resList = tmpList
     else:
         return util.errorJsonWrapper("getUserInfoList中不支持改活动类型")
 
-    try:
-        retValue = []
-        for item in resList:
-            retValueItem = {}
-            userInfo = item.participant_user
-            activityInfo = item.participant_activity
+    #try:
+    retValue = []
+    for idx in range(len(resList)):
+        retValueItem = {}
+        userInfo = resList[idx].participant_user
+        activityInfo = resList[idx].participant_activity
 
-            retValueItem["activity_id"] = activityInfo.pk
-            retValueItem["activity_picture"] = activityInfo.activity_picture
-            retValueItem['activity_address'] = activityInfo.activity_address
-            retValueItem['activity_price'] = activityInfo.activity_price
-            retValueItem['activity_introduction'] = activityInfo.activity_introduction
-            retValueItem['activity_pet_type'] = activityInfo.activity_pet_type
-            retValueItem['activity_start_time'] = activityInfo.activity_start_time
-            retValueItem['activity_end_time'] = activityInfo.activity_end_time
+        retValueItem["activity_id"] = activityInfo.pk
+        retValueItem["activity_picture"] = activityInfo.activity_picture
+        retValueItem['activity_address'] = activityInfo.activity_address
+        retValueItem['activity_price'] = activityInfo.activity_price
+        retValueItem['activity_introduction'] = activityInfo.activity_introduction
+        retValueItem['activity_pet_type'] = activityInfo.activity_pet_type
+        retValueItem['activity_start_time'] = activityInfo.activity_start_time
+        retValueItem['activity_end_time'] = activityInfo.activity_end_time
             
+        
+        retValueItem["user_id"] = userInfo.user_id
+        retValueItem["user_nickname"] = userInfo.user_nickname
+        retValueItem["user_avatar"] = userInfo.user_avatar
+        retValueItem["user_address"] = userInfo.user_address
+        retValueItem["user_age"] = userInfo.user_age
+        retValueItem["user_interest"] = userInfo.user_interest
+        retValueItem["user_gender"] = userInfo.user_gender
+        retValueItem["user_authenticated"] = userInfo.user_authenticated
+        
+        if activityType == USERFOSTERLIST:
+            retValueItem["participant_status"] = resListStatus[idx]
 
-            retValueItem["user_id"] = userInfo.user_id
-            retValueItem["user_nickname"] = userInfo.user_nickname
-            retValueItem["user_avatar"] = userInfo.user_avatar
-            retValueItem["user_address"] = userInfo.user_address
-            retValueItem["user_age"] = userInfo.user_age
-            retValueItem["user_interest"] = userInfo.user_interest
-            retValueItem["user_gender"] = userInfo.user_gender
-            retValueItem["user_authenticated"] = userInfo.user_authenticated
+        retValue.append(retValueItem)
 
-            retValueItem["participant_status"] = item.participant_status
+    if number >= 0:
+        retValue = retValue[:number]
 
-            retValue.append(retValueItem)
+    result = {}
 
-        if number >= 0:
-            retValue = retValue[:number]
+    result["retValue"] = retValue
+    result["retCode"] = 0
+    result["retMsg"] = ""
 
-        result = {}
+    return json.dumps(result)
+    #except Exception:
 
-        result["retValue"] = retValue
-        result["retCode"] = 0
-        result["retMsg"] = ""
-
-        return json.dumps(result)
-    except Exception:
-
-        return util.errorJsonWrapper("请求信息列表失败")
+        #return util.errorJsonWrapper("请求信息列表失败")

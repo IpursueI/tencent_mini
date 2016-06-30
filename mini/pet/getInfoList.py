@@ -70,6 +70,7 @@ def getInfoList(data):
             retValueItem['activity_end_time'] = activityInfo.activity_end_time
             
 
+            retValueItem["user_id"] = userInfo.user_id
             retValueItem["user_nickname"] = userInfo.user_nickname
             retValueItem["user_avatar"] = userInfo.user_avatar
             retValueItem["user_address"] = userInfo.user_address

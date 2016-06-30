@@ -59,6 +59,25 @@ def issueAdoptPetInfo(data,files):
     activityStartTime = time.strftime("%Y-%m-%d",(time.strptime(activityStartTime,"%Y-%m-%d")))
     activityEndTime = time.strftime("%Y-%m-%d",(time.strptime(activityEndTime,"%Y-%m-%d")))
 
+    resDict = {}
+    resDict['activity_introduction'] = activityIntro
+    resDict['activity_address'] = activityAddr
+    resDict['activity_longitude'] = activityLongi
+    resDict['activity_latitude'] = activityLati
+    resDict['activity_pet_type'] = activityPet
+    resDict['activity_price'] = activityPrice
+    resDict['activity_start_time'] = activityStartTime
+    resDict['activity_end_time'] = activityEndTime
+    resDict["user_id"] = user.user_id
+    resDict["user_nickname"] = user.user_nickname
+    resDict["user_avatar"] = user.user_avatar
+    resDict["user_address"] = user.user_address
+    resDict["user_age"] = user.user_age
+    resDict["user_interest"] = user.user_interest
+    resDict["user_gender"] = user.user_gender
+    resDict["user_authenticated"] = user.user_authenticated
+
+
     picName = util.savePicture(files,"activity_picture",20*1024*1024)
     if picName == -1:
         return util.errorJsonWrapper("failed")
@@ -80,6 +99,9 @@ def issueAdoptPetInfo(data,files):
     except Exception:
         return util.errorJsonWrapper("发布收养信息出错，activity无法写入数据库")
 
+    resDict["activity_id"] = activity.pk
+    resDict["activity_picture"] = picName
+
     try:
         participant = models.Participant(participant_user = user,
                                      participant_activity = activity,
@@ -88,6 +110,6 @@ def issueAdoptPetInfo(data,files):
     except Exception:
         return util.errorJsonWrapper("发布收养信息出错，participant无法写入数据库")
     
-    userDict = {"user_id" : userId} 
-    res = dict(retCode = 0, retMsg = "", retValue = userDict)
+    #userDict = {"user_id" : userId} 
+    res = dict(retCode = 0, retMsg = "", retValue = resDict)
     return json.dumps(res)

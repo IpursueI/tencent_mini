@@ -46,10 +46,4 @@ def cancelFoster(data):
     except:
         return util.errorJsonWrapper("写入数据库出错")
 
-    return util.simpleOkJsonWrapper()
-
-
-
-
-
-       
+    return util.simpleOkJsonWrapper(partFoster.participant_status)
