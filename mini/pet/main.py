@@ -9,10 +9,12 @@ import login
 import issueAdoptPetInfo
 import issueFosterPetInfo
 import getInfoList
+import getUserInfoList
 import getAdoptDetailList
 import authenticateUser
 import logout
-
+import getInfoList_dev
+import cancelFoster
 
 def index(request):
     if request.method == "POST":
@@ -51,12 +53,16 @@ def functionChoice(post, files):
         elif funcName == "issueFosterPetInfo":
             return HttpResponse(issueFosterPetInfo.issueFosterPetInfo(funcArgs))
         elif funcName == "getInfoList":
-            return HttpResponse(getInfoList.getInfoList(funcArgs))
+            return HttpResponse(getInfoList_dev.getInfoList(funcArgs))
+        elif funcName == "getUserInfoList":
+            return HttpResponse(getUserInfoList.getUserInfoList(funcArgs))
         elif funcName == "getAdoptDetailList":
             return HttpResponse(getAdoptDetailList.getAdoptDetailList(funcArgs))
         elif funcName == "authenticateUser":
             return HttpResponse(authenticateUser.authenticateUser(funcArgs,files))
         elif funcName == "logout":
             return HttpResponse(logout.logout(funcArgs))
+        elif funcName == "cancelFoster":
+            return HttpResponse(cancelFoster.cancelFoster(funcArgs))
         else:
             return HttpResponse(util.errorJsonWrapper(funcName+u":暂不支持该函数"))

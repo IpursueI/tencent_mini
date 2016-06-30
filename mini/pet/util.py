@@ -11,7 +11,6 @@ def checkToken(userId, token):
     user = models.User.objects.filter(user_id=userId).first()
     if not user:
         return False
-        #return errorJsonWrapper("aaa")
     else:
         if str(datetime.datetime.now()) < user.user_token_overdue:
             if token == user.user_token:
@@ -19,11 +18,9 @@ def checkToken(userId, token):
                 user.save()
                 return True
             else:
-                #return errorJsonWrapper("bbb")
                 return False
         else:
             return False
-            #return errorJsonWrapper("ccc")
 
 def errorJsonWrapper(errorInfo=""):
     res = dict(retCode=-1, retMsg=errorInfo, retValue="")
@@ -57,7 +54,7 @@ def savePicture(files, name, picSize):
         return ""
 
 def checkPicture(picture, picSize):
-    return True
+    #return True
     name = picture.name
     form = name.split('.')[1].lower()
     if form not in ['jpg','png','jpeg','gif']:
@@ -83,8 +80,8 @@ def intelligentSort(userId, sortType):
         for participant in partList:
             recommendDict[participant] = str(bin(tag^participant.participant_user.user_interest)).count("1")
         sortedList = sorted(recommendDict.items(), lambda x, y:cmp(x[1],y[1]))
-        
+                                                                                                                        
         return [item[0] for item in sortedList]
-    
+                                                                                                                                
     else:
         return models.Participant.objects.filter(participant_user_type=1)

@@ -11,16 +11,22 @@ def authenticateUser(data, files):
     try:
         userId = data["user_id"]
     except KeyError:
-        return util.errorJsonWrapper("注册数据没有user_id字段")
+        return util.errorJsonWrapper("请求数据没有user_id字段")
+    try:
+        userToken = data["user_token"]
+    except KeyError:
+        return util.errorJsonWrapper("请求数据没有token字段")
+
+    if not util.checkToken(userId, userToken):
+        return util.errorJsonWrapper("token 验证失败")
 
     user = models.User.objects.get(user_id=userId)
 
     if user:
         try:
-            #user.user_authenticated_picture = util.savePicture(files,"user_authenticated_picture")
             picName = util.savePicture(files,"user_authenticated_picture",20*1024*1024)
             if picName == -1:
-                return util.errorJsonWrapper("图片格式错误，只支持小于20M的jpg,jpeg,png")
+                return util.errorJsonWrapper("failed")
             user.user_authenticated_picture = picName 
             user.user_authenticated = True
             user.save()
@@ -31,24 +37,3 @@ def authenticateUser(data, files):
         return util.simpleOkJsonWrapper("用户认证成功")
     else:
         return util.errorJsonWrapper("该用户不存在")
-
-
-#def saveUserAvatar(files):
-#    if files:  #如果该request携带文件数据
-#        try:
-#            avatar = files["user_avatar"] #图像的key
-#            avatarSavedName = time.strftime("%Y%m%d%H%M%S")+avatar.name
-#            nameList = avatarSavedName.split('.')
-#            avatarSavedName = hashlib.md5(nameList[0]).hexdigest()+"."+nameList[1]
-#            filePath = os.path.join(settings.MEDIA_ROOT,avatarSavedName)
-#       
-#            with open(filePath, 'wb+') as destination:
-#                for chunk in avatar.chunks():
-#                    destination.write(chunk)
-#        except:
-#            return ""
-#
-#        avatarUrl = "media/"+avatarSavedName
-#        return avatarUrl
-#    else:
-#        return ""

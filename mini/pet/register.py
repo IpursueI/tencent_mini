@@ -36,7 +36,6 @@ def register(data):
             tmpUser.save()
         except Exception:
             return util.errorJsonWrapper("register 数据写入数据库出错")
-        #tokenDict = {"user_token" : token}
 
         retValueItem = {}
         retValueItem['user_token'] = token

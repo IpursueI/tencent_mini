@@ -28,18 +28,25 @@ post参数内容：
 def issueAdoptPetInfo(data,files):
     EVENT_STATUS = 1
     ADOPT = 1
-    userId = data.get("user_id")
+
+    try:
+        userId = data["user_id"]
+    except KeyError:
+        return util.errorJsonWrapper("请求数据没有user_id字段")
+    try:
+        userToken = data["user_token"]
+    except KeyError:
+        return util.errorJsonWrapper("请求数据没有token字段")
+
+    if not util.checkToken(userId, userToken):
+        return util.errorJsonWrapper("token 验证失败")
+
     user = models.User.objects.filter(user_id = userId).first()
     if not user:
         return util.errorJsonWrapper("不存在该用户")
 
     if not user.user_authenticated:
         return util.errorJsonWrapper("failed")
-
-    # check token by stanwu
-    #token = data.get("user_token")
-    #if token != user.user_token:
-    #    return util.errorJsonWrapper("token错误")
     
     activityIntro = data.get("activity_introduction")
     activityAddr = data.get("activity_address")
@@ -54,7 +61,7 @@ def issueAdoptPetInfo(data,files):
 
     picName = util.savePicture(files,"activity_picture",20*1024*1024)
     if picName == -1:
-        return util.errorJsonWrapper("图片格式错误，只支持小于20M的jpg,jpeg,png")
+        return util.errorJsonWrapper("failed")
     activityPic = picName 
 
     try:
@@ -80,26 +87,7 @@ def issueAdoptPetInfo(data,files):
         participant.save()
     except Exception:
         return util.errorJsonWrapper("发布收养信息出错，participant无法写入数据库")
-
-    return util.simpleOkJsonWrapper()
-
-
-#def saveActivityPicture(files):
-#    if files:
-#        try:
-#            picture = files["activity_picture"]
-#            pictureSavedName = time.strftime("%Y%m%d%H%M%S")+picture.name
-#            nameList = pictureSavedName.split('.')
-#            pictureSavedName = hashlib.md5(nameList[0]).hexdigest()+"."+nameList[1]
-#            filePath = os.path.join(settings.MEDIA_ROOT,pictureSavedName)
-#
-#            with open(filePath, 'wb+') as destination:
-#                for chunk in picture.chunks():
-#                    destination.write(chunk)
-#        except:
-#            return ""
-#
-#        pictureUrl = "media/"+pictureSavedName
-#        return pictureUrl
-#    else:
-#        return ""
+    
+    userDict = {"user_id" : userId} 
+    res = dict(retCode = 0, retMsg = "", retValue = userDict)
+    return json.dumps(res)

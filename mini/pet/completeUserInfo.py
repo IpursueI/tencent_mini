@@ -8,20 +8,17 @@ import json
 import hashlib
 import time
 from django.conf import settings
-sys.path.append("..")
 
 def completeUserInfo(data, files):
     try:
         userId = data["user_id"]
     except KeyError:
         return util.errorJsonWrapper("注册数据没有user_id字段")
-
     try:
         userToken = data["user_token"]
     except KeyError:
         return util.errorJsonWrapper("注册数据没有user_token字段")
 
-    #return util.checkToken(userId,userToken)
     if not util.checkToken(userId, userToken):
         return util.errorJsonWrapper("token 验证失败")
 
@@ -55,17 +52,12 @@ def completeUserInfo(data, files):
             FIllin.user_age = userAge
             FIllin.user_address = userAddress
             FIllin.user_nickname = userNickname
-            #FIllin.user_longitude = userLongitude
-            #FIllin.user_latitude = userLatitude
             FIllin.user_interest = userInterest
             
-            #保存头像地址
-            #FIllin.user_avatar = saveUserAvatar(files)
             picName = util.savePicture(files,"user_avatar",2*1024*1024)
             if picName == -1:
-                return util.errorJsonWrapper("图片格式错误，只支持小于2.5M的jpg,jpeg,png")
+                return util.errorJsonWrapper("failed")
             FIllin.user_avatar = picName 
-            #return util.errorJsonWrapper(saveUserAvatar(files))
 
             FIllin.save()
 
@@ -76,24 +68,3 @@ def completeUserInfo(data, files):
 
     else:
         return util.errorJsonWrapper("该用户不存在")
-
-
-#def saveUserAvatar(files):
-#    if files:  #如果该request携带文件数据
-#        try:
-#            avatar = files["user_avatar"] #图像的key
-#            avatarSavedName = time.strftime("%Y%m%d%H%M%S")+avatar.name
-#            nameList = avatarSavedName.split('.')
-#            avatarSavedName = hashlib.md5(nameList[0]).hexdigest()+"."+nameList[1]
-#            filePath = os.path.join(settings.MEDIA_ROOT,avatarSavedName)
-#       
-#            with open(filePath, 'wb+') as destination:
-#                for chunk in avatar.chunks():
-#                    destination.write(chunk)
-#        except:
-#            return ""
-#
-#        avatarUrl = "media/"+avatarSavedName
-#        return avatarUrl
-#    else:
-#        return ""

@@ -7,13 +7,10 @@ import hashlib
 '''
 chayfan:通过token验证用户身份
 '''
-def getInfoList(data):
+def getUserInfoList(data):
 
-    MAINPAGE = 1
-    ALLADOPTLIST = 2
-    ALLFOSTERLIST = 3
-    USERADOPTLIST = 4
-    USERFOSTERLIST = 5
+    USERADOPTLIST = 1
+    USERFOSTERLIST = 2
 
     try:
         userId = data["user_id"]
@@ -44,14 +41,31 @@ def getInfoList(data):
     except KeyError:
         return util.errorJsonWrapper("请求数据没有sort_type字段")
 
-    if activityType == MAINPAGE or activityType == ALLADOPTLIST:
-        resList = util.intelligentSort(userId, sortType)
-    elif activityType == ALLFOSTERLIST: 
-        resList = models.Participant.objects.filter(participant_user_type=2)
-    elif activityType == USERADOPTLIST: 
+    if activityType == USERADOPTLIST: 
         resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=1)
+        tmpList= []
+        for item in resList:
+            userInfo = item.participant_user
+            activityInfo = item.participant_activity
+            userTypeInfo = item.participant_user_type
+
+            tmpList.extend(models.Participant.objects.filter(participant_activity = activityInfo, participant_user_type = 2))
+        
+        resList = tmpList
+            
     elif activityType == USERFOSTERLIST: 
         resList = models.Participant.objects.filter(participant_user__user_id=userId, participant_user_type=2)
+        tmpList= []
+        for item in resList:
+            userInfo = item.participant_user
+            activityInfo = item.participant_activity
+            userTypeInfo = item.participant_user_type
+
+            tmpList.extend(models.Participant.objects.filter(participant_activity = activityInfo, participant_user_type = 1))
+        
+        resList = tmpList
+    else:
+        return util.errorJsonWrapper("getUserInfoList中不支持改活动类型")
 
     try:
         retValue = []
@@ -70,6 +84,7 @@ def getInfoList(data):
             retValueItem['activity_end_time'] = activityInfo.activity_end_time
             
 
+            retValueItem["user_id"] = userInfo.user_id
             retValueItem["user_nickname"] = userInfo.user_nickname
             retValueItem["user_avatar"] = userInfo.user_avatar
             retValueItem["user_address"] = userInfo.user_address
@@ -77,6 +92,8 @@ def getInfoList(data):
             retValueItem["user_interest"] = userInfo.user_interest
             retValueItem["user_gender"] = userInfo.user_gender
             retValueItem["user_authenticated"] = userInfo.user_authenticated
+
+            retValueItem["participant_status"] = item.participant_status
 
             retValue.append(retValueItem)
 

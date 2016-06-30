@@ -37,8 +37,6 @@ def login(data):
                     return util.errorJsonWrapper("token错误")
             else:
                 return util.errorJsonWrapper("token已过期")
-
-
         else:
             if user.user_password != hashlib.md5(password).hexdigest():
                 return util.errorJsonWrapper("密码错误")

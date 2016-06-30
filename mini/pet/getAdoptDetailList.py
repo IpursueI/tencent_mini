@@ -25,6 +25,18 @@ post参数内容：{"name":"getAdoptDetailList","args":{"activity_id":xxx}}
 
 def getAdoptDetailList(data):
 
+    try:
+        userId = data["user_id"]
+    except KeyError:
+        return util.errorJsonWrapper("请求数据没有user_id字段")
+    try:
+        userToken = data["user_token"]
+    except KeyError:
+        return util.errorJsonWrapper("请求数据没有token字段")
+
+    if not util.checkToken(userId, userToken):
+        return util.errorJsonWrapper("token 验证失败")
+
     activityId = data.get("activity_id")
     if not activityId:
         return util.errorJsonWrapper("收养详细信息获取请求错误,不存在该activity_id")
@@ -37,15 +49,16 @@ def getAdoptDetailList(data):
     if not user:
         return util.errorJsonWrapper("收养详细信息获取请求错误,不存在该用户")
 
-    # check token by stanwu 为了方便调试暂时注释掉
-    #token = data.get("user_token")
-    #if token != user.user_token:
-    #    return util.errorJsonWrapper("token错误")
-
-    detailDict = {  "user_id" : user.user_id, "activity_picture" : activity.activity_picture, "user_avatar" : user.user_avatar,
-                    "user_nickname" : user.user_nickname, "user_age" : user.user_age, "user_interest" : user.user_interest,
-                    "activity_pet_type" : activity.activity_pet_type, "activity_price" : activity.activity_price,
-                    "activity_address": activity.activity_address, "activity_introduction": activity.activity_introduction,
+    detailDict = {  "user_id" : user.user_id,
+                    "activity_picture" : activity.activity_picture,
+                    "user_avatar" : user.user_avatar,
+                    "user_nickname" : user.user_nickname,
+                    "user_age" : user.user_age,
+                    "user_interest" : user.user_interest,
+                    "activity_pet_type" : activity.activity_pet_type,
+                    "activity_price" : activity.activity_price,
+                    "activity_address": activity.activity_address,
+                    "activity_introduction": activity.activity_introduction,
                     "activity_start_time": activity.activity_start_time,
                     "activity_end_time": activity.activity_end_time
                     }
@@ -55,5 +68,3 @@ def getAdoptDetailList(data):
     res = dict(retCode = 0, retMsg = "", retValue = retList)
 
     return json.dumps(res)
-
-

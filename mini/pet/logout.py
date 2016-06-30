@@ -8,8 +8,19 @@ import datetime
 
 def logout(data):
 
-    userID = data.get("user_id")
-    user = models.User.objects.filter(user_id = userID).first()
+    try:
+        userId = data["user_id"]
+    except KeyError:
+        return util.errorJsonWrapper("请求数据没有user_id字段")
+    try:
+        userToken = data["user_token"]
+    except KeyError:
+        return util.errorJsonWrapper("请求数据没有token字段")
+
+    if not util.checkToken(userId, userToken):
+        return util.errorJsonWrapper("token 验证失败")
+
+    user = models.User.objects.filter(user_id = userId).first()
 
     if not user:
         return util.errorJsonWrapper("不存在该用户名")
