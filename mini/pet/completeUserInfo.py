@@ -57,7 +57,8 @@ def completeUserInfo(data, files):
             picName = util.savePicture(files,"user_avatar",2*1024*1024)
             if picName == -1:
                 return util.errorJsonWrapper("failed")
-            FIllin.user_avatar = picName 
+            if picName != "":
+                FIllin.user_avatar = picName 
 
             FIllin.save()
 
